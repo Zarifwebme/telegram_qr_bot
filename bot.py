@@ -36,16 +36,17 @@ def generate_qr(data, size=10, color="black", background="white"):
     return img
 
 
-# /start komandasini ishlatish
+user_ids = set()
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    user_ids.add(update.message.from_user.id)
     await update.message.reply_text(
         "Assalomu alaykum! Men QR kod generator botman.\n"
         "Menga matn yoki URL yuboring (200 belgidan oshmasligi kerak), men esa siz uchun QR kod yarataman!"
     )
 
-
-# QR kodni yaratish va yuborish
 async def generate_qr_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    user_ids.add(update.message.from_user.id)
     try:
         user_input = update.message.text
         if len(user_input) > 200:
@@ -54,14 +55,9 @@ async def generate_qr_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
             )
             return
 
-        # QR kodni yaratish
         img = generate_qr(user_input)
-
-        # QR kodni vaqtinchalik fayl sifatida saqlash
         file_path = "qr_code.png"
         img.save(file_path)
-
-        # QR kodni foydalanuvchiga yuborish
         await update.message.reply_photo(photo=open(file_path, "rb"))
         await update.message.reply_text("QR kodingiz tayyor!")
     except Exception as e:
@@ -70,6 +66,8 @@ async def generate_qr_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
             "Kutilmagan xatolik yuz berdi! Iltimos, qayta urinib ko‘ring."
         )
 
+async def user_count(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text(f"Botdan foydalanuvchilar soni: {len(user_ids)}")
 
 # Botdagi global xatolarni qayta ishlash
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -95,6 +93,7 @@ def main():
 
         # Komanda va xabarlar uchun handlerlar
         application.add_handler(CommandHandler("start", start))
+        application.add_handler(CommandHandler("usercount", user_count))
         application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, generate_qr_handler))
 
         # Global xatolar uchun handler
