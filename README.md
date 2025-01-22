@@ -52,14 +52,3 @@ This repository contains a Telegram bot that generates QR codes. The bot allows 
    ```
 
 2. Start a chat with your bot on Telegram and send it a text message to generate a QR code.
-
-## Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request for any changes or improvements.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-```
-
-This content provides a basic structure with sections for features, getting started, prerequisites, installation, configuration, usage, contributing, and license. You can customize it further based on your specific use case and requirements.
